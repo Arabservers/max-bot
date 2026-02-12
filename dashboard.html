@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Max Bot — لوحة التحكم</title>
     <meta name="theme-color" content="#5865F2">
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap"
+        rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -15,36 +16,96 @@
         }
 
         :root {
-            --bg: #0a0a1a;
-            --card: #12122a;
-            --glass: rgba(255, 255, 255, .05);
-            --border: rgba(255, 255, 255, .08);
-            --text: #e0e0e0;
-            --dim: #888;
-            --blue: #5865F2;
-            --green: #57F287;
-            --red: #ED4245;
+            --bg: #050510;
+            --bg2: #0a0a1f;
+            --card: rgba(17, 17, 45, 0.6);
+            --card-solid: #0e0e28;
+            --border: rgba(88, 101, 242, 0.15);
+            --border-hover: rgba(88, 101, 242, 0.4);
+            --primary: #5865F2;
+            --primary-dark: #4752c4;
+            --accent: #57F287;
+            --danger: #ED4245;
             --yellow: #FEE75C;
-            --purple: #9b59b6
+            --purple: #9b59b6;
+            --text: #e6edf3;
+            --dim: #7c8da6;
+            --glass: rgba(88, 101, 242, 0.06);
+            --glow: 0 0 40px rgba(88, 101, 242, 0.15);
+            --radius: 16px;
+            --radius-sm: 10px
+        }
+
+        html {
+            scroll-behavior: smooth
         }
 
         body {
             font-family: 'Tajawal', sans-serif;
             background: var(--bg);
             color: var(--text);
-            min-height: 100vh
+            overflow-x: hidden;
+            min-height: 100vh;
+            line-height: 1.6
         }
 
         a {
-            color: var(--blue);
-            text-decoration: none
+            text-decoration: none;
+            color: inherit
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg)
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 3px
+        }
+
+        .bg-grid {
+            position: fixed;
+            inset: 0;
+            background-image: linear-gradient(rgba(88, 101, 242, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(88, 101, 242, 0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            pointer-events: none;
+            z-index: 0
+        }
+
+        .bg-glow {
+            position: fixed;
+            pointer-events: none;
+            z-index: 0;
+            border-radius: 50%;
+            filter: blur(150px);
+            opacity: 0.12
+        }
+
+        .bg-glow-1 {
+            width: 600px;
+            height: 600px;
+            background: var(--primary);
+            top: -10%;
+            right: -5%
+        }
+
+        .bg-glow-2 {
+            width: 500px;
+            height: 500px;
+            background: var(--accent);
+            bottom: 10%;
+            left: -10%
         }
 
         .top-bar {
-            background: rgba(10, 10, 26, .95);
-            backdrop-filter: blur(20px);
+            background: rgba(5, 5, 16, 0.85);
+            backdrop-filter: blur(24px) saturate(180%);
             border-bottom: 1px solid var(--border);
-            padding: 16px 32px;
+            padding: 14px 32px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -53,35 +114,411 @@
             z-index: 100
         }
 
+        .top-bar-left {
+            display: flex;
+            align-items: center;
+            gap: 16px
+        }
+
         .top-bar h1 {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
+            font-weight: 800;
             display: flex;
             align-items: center;
             gap: 10px
         }
 
-        .top-bar h1 span {
-            background: var(--blue);
+        .top-bar h1 .badge {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
             color: #fff;
-            padding: 2px 10px;
+            padding: 3px 12px;
             border-radius: 8px;
-            font-size: .75rem
+            font-size: .7rem;
+            font-weight: 700
+        }
+
+        .top-bar-right {
+            display: flex;
+            align-items: center;
+            gap: 14px
         }
 
         .back-btn {
             color: var(--dim);
             font-size: .9rem;
-            transition: .3s
+            transition: .3s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border)
         }
 
         .back-btn:hover {
-            color: #fff
+            color: #fff;
+            border-color: var(--border-hover);
+            background: var(--glass)
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 6px 16px 6px 6px;
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 50px;
+            transition: .3s
+        }
+
+        .user-info:hover {
+            border-color: var(--border-hover)
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            overflow: hidden;
+            background: var(--glass)
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: .9rem
+        }
+
+        .logout-btn {
+            color: var(--danger);
+            font-size: .8rem;
+            cursor: pointer;
+            padding: 6px 14px;
+            border-radius: var(--radius-sm);
+            border: 1px solid rgba(237, 66, 69, 0.2);
+            transition: .3s;
+            background: none;
+            font-family: inherit;
+            font-weight: 600
+        }
+
+        .logout-btn:hover {
+            background: rgba(237, 66, 69, 0.12);
+            border-color: rgba(237, 66, 69, 0.4)
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 24px
+            padding: 32px 24px;
+            position: relative;
+            z-index: 1
+        }
+
+        /* Login View */
+        .login-view {
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center
+        }
+
+        .login-card {
+            background: var(--card);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 60px 50px;
+            max-width: 480px;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+            animation: fadeInUp .6s both
+        }
+
+        .login-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+        }
+
+        .login-icon {
+            font-size: 4rem;
+            margin-bottom: 20px
+        }
+
+        .login-card h2 {
+            font-size: 1.8rem;
+            font-weight: 900;
+            margin-bottom: 12px
+        }
+
+        .login-card h2 .gradient {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent
+        }
+
+        .login-card p {
+            color: var(--dim);
+            margin-bottom: 35px;
+            font-size: 1rem;
+            line-height: 1.8
+        }
+
+        .btn {
+            padding: 13px 32px;
+            border-radius: var(--radius-sm);
+            font-weight: 700;
+            transition: all .3s;
+            cursor: pointer;
+            border: none;
+            font-family: inherit;
+            font-size: 15px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px
+        }
+
+        .btn-discord {
+            background: #5865F2;
+            color: #fff;
+            box-shadow: 0 4px 20px rgba(88, 101, 242, 0.35);
+            font-size: 16px;
+            padding: 15px 40px
+        }
+
+        .btn-discord:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 35px rgba(88, 101, 242, 0.55);
+            background: #4752c4
+        }
+
+        .btn-glow {
+            background: linear-gradient(135deg, var(--accent), #2ecc71);
+            color: #000;
+            font-weight: 800;
+            box-shadow: 0 4px 20px rgba(87, 242, 135, 0.3)
+        }
+
+        .btn-glow:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 35px rgba(87, 242, 135, 0.5)
+        }
+
+        .btn-outline {
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text);
+            padding: 10px 20px;
+            font-size: 14px
+        }
+
+        .btn-outline:hover {
+            border-color: var(--primary);
+            background: var(--glass)
+        }
+
+        .discord-svg {
+            width: 24px;
+            height: 24px;
+            fill: #fff
+        }
+
+        .login-features {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 30px;
+            flex-wrap: wrap
+        }
+
+        .login-feature {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--dim);
+            font-size: .8rem
+        }
+
+        .login-feature .dot {
+            width: 6px;
+            height: 6px;
+            background: var(--accent);
+            border-radius: 50%
+        }
+
+        /* Servers Grid */
+        .page-title {
+            margin-bottom: 32px;
+            animation: fadeInUp .5s both
+        }
+
+        .page-title h2 {
+            font-size: 1.8rem;
+            font-weight: 900;
+            margin-bottom: 6px
+        }
+
+        .page-title p {
+            color: var(--dim);
+            font-size: .95rem
+        }
+
+        .guilds-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+            animation: fadeInUp .6s .1s both
+        }
+
+        .guild-card {
+            background: var(--card);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            transition: all .4s;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden
+        }
+
+        .guild-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            transform: scaleX(0);
+            transition: .4s;
+            transform-origin: right
+        }
+
+        .guild-card:hover::after {
+            transform: scaleX(1);
+            transform-origin: left
+        }
+
+        .guild-card:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-4px);
+            box-shadow: var(--glow)
+        }
+
+        .guild-card.no-bot {
+            opacity: 0.5
+        }
+
+        .guild-card.no-bot:hover {
+            opacity: 0.7
+        }
+
+        .guild-card-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+            overflow: hidden;
+            background: var(--glass);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--primary);
+            flex-shrink: 0
+        }
+
+        .guild-card-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover
+        }
+
+        .guild-card-info {
+            flex: 1;
+            min-width: 0
+        }
+
+        .guild-card-info h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis
+        }
+
+        .guild-card-info .sub {
+            font-size: .8rem;
+            color: var(--dim);
+            display: flex;
+            align-items: center;
+            gap: 6px
+        }
+
+        .guild-card-info .sub .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%
+        }
+
+        .guild-card-info .sub .dot.on {
+            background: var(--accent)
+        }
+
+        .guild-card-info .sub .dot.off {
+            background: var(--danger)
+        }
+
+        .guild-card-arrow {
+            color: var(--dim);
+            font-size: 1.2rem;
+            transition: .3s
+        }
+
+        .guild-card:hover .guild-card-arrow {
+            color: var(--primary);
+            transform: translateX(-4px)
+        }
+
+        /* Dashboard View */
+        .dash-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--dim);
+            font-size: .9rem;
+            margin-bottom: 24px;
+            cursor: pointer;
+            padding: 8px 16px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            transition: .3s;
+            background: none;
+            font-family: inherit
+        }
+
+        .dash-back:hover {
+            color: #fff;
+            border-color: var(--border-hover);
+            background: var(--glass)
         }
 
         .guild-header {
@@ -91,8 +528,10 @@
             margin-bottom: 32px;
             padding: 24px;
             background: var(--card);
-            border-radius: 16px;
-            border: 1px solid var(--border)
+            backdrop-filter: blur(12px);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            animation: fadeInUp .5s both
         }
 
         .guild-icon {
@@ -104,7 +543,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 28px
+            font-size: 28px;
+            flex-shrink: 0
         }
 
         .guild-icon img {
@@ -128,15 +568,23 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
             gap: 16px;
-            margin-bottom: 32px
+            margin-bottom: 32px;
+            animation: fadeInUp .5s .1s both
         }
 
         .stat-box {
             background: var(--card);
+            backdrop-filter: blur(12px);
             border: 1px solid var(--border);
             border-radius: 14px;
             padding: 20px;
-            text-align: center
+            text-align: center;
+            transition: .3s
+        }
+
+        .stat-box:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-3px)
         }
 
         .stat-box .num {
@@ -151,11 +599,11 @@
         }
 
         .blue {
-            color: var(--blue)
+            color: var(--primary)
         }
 
         .green {
-            color: var(--green)
+            color: var(--accent)
         }
 
         .yellow {
@@ -167,11 +615,12 @@
         }
 
         .red {
-            color: var(--red)
+            color: var(--danger)
         }
 
         .section {
-            margin-bottom: 32px
+            margin-bottom: 32px;
+            animation: fadeInUp .5s .2s both
         }
 
         .section h3 {
@@ -191,12 +640,18 @@
 
         .setting-item {
             background: var(--card);
+            backdrop-filter: blur(12px);
             border: 1px solid var(--border);
             border-radius: 12px;
             padding: 14px 18px;
             display: flex;
             justify-content: space-between;
-            align-items: center
+            align-items: center;
+            transition: .3s
+        }
+
+        .setting-item:hover {
+            border-color: var(--border-hover)
         }
 
         .setting-item .name {
@@ -212,12 +667,12 @@
 
         .val.on {
             background: rgba(87, 242, 135, .15);
-            color: var(--green)
+            color: var(--accent)
         }
 
         .val.off {
             background: rgba(237, 66, 69, .15);
-            color: var(--red)
+            color: var(--danger)
         }
 
         .lb-list {
@@ -230,17 +685,24 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            padding: 10px 16px;
+            padding: 12px 16px;
             background: var(--card);
+            backdrop-filter: blur(12px);
             border: 1px solid var(--border);
-            border-radius: 10px
+            border-radius: var(--radius-sm);
+            transition: .3s
+        }
+
+        .lb-row:hover {
+            background: rgba(88, 101, 242, 0.06);
+            border-color: var(--border-hover)
         }
 
         .lb-rank {
             width: 28px;
             font-weight: 800;
             font-size: .9rem;
-            color: var(--blue)
+            color: var(--primary)
         }
 
         .lb-av {
@@ -276,9 +738,15 @@
 
         .sug-card {
             background: var(--card);
+            backdrop-filter: blur(12px);
             border: 1px solid var(--border);
             border-radius: 12px;
-            padding: 16px
+            padding: 16px;
+            transition: .3s
+        }
+
+        .sug-card:hover {
+            border-color: var(--border-hover)
         }
 
         .sug-top {
@@ -290,7 +758,7 @@
 
         .sug-id {
             font-weight: 700;
-            color: var(--blue);
+            color: var(--primary);
             font-size: .85rem
         }
 
@@ -308,12 +776,12 @@
 
         .sug-status.approved {
             background: rgba(87, 242, 135, .12);
-            color: var(--green)
+            color: var(--accent)
         }
 
         .sug-status.rejected {
             background: rgba(237, 66, 69, .12);
-            color: var(--red)
+            color: var(--danger)
         }
 
         .sug-text {
@@ -338,13 +806,65 @@
 
         .loading {
             text-align: center;
-            padding: 60px;
+            padding: 80px;
             color: var(--dim)
+        }
+
+        .loading .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin .8s linear infinite;
+            margin: 0 auto 16px
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg)
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+
+        .add-bot-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 18px;
+            background: linear-gradient(135deg, var(--accent), #2ecc71);
+            color: #000;
+            font-weight: 700;
+            font-size: .8rem;
+            border-radius: 8px;
+            transition: .3s
+        }
+
+        .add-bot-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(87, 242, 135, 0.3)
         }
 
         @media(max-width:600px) {
             .container {
                 padding: 16px
+            }
+
+            .top-bar {
+                padding: 12px 16px;
+                flex-wrap: wrap;
+                gap: 10px
             }
 
             .guild-header {
@@ -355,25 +875,180 @@
             .stats-grid {
                 grid-template-columns: repeat(2, 1fr)
             }
+
+            .guilds-grid {
+                grid-template-columns: 1fr
+            }
+
+            .login-card {
+                padding: 40px 24px;
+                margin: 0 16px
+            }
+
+            .login-card h2 {
+                font-size: 1.4rem
+            }
+
+            .user-name {
+                display: none
+            }
         }
     </style>
 </head>
 
 <body>
+    <div class="bg-grid"></div>
+    <div class="bg-glow bg-glow-1"></div>
+    <div class="bg-glow bg-glow-2"></div>
+
     <div class="top-bar">
-        <h1>Max Bot <span>Dashboard</span></h1>
-        <a href="/" class="back-btn">← الرئيسية</a>
+        <div class="top-bar-left">
+            <h1>⚡ Max Bot <span class="badge">Dashboard</span></h1>
+        </div>
+        <div class="top-bar-right" id="topRight">
+            <a href="/" class="back-btn">← الرئيسية</a>
+        </div>
     </div>
+
     <div class="container" id="app">
-        <div class="loading" id="loading">⏳ جاري تحميل بيانات السيرفر...</div>
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            جاري التحميل...
+        </div>
     </div>
+
     <script>
-        const params = new URLSearchParams(window.location.search);
-        const guildId = params.get('guild');
-        if (!guildId) { document.getElementById('app').innerHTML = '<div class="empty">❌ حدد السيرفر: ?guild=GUILD_ID</div>'; }
-        else {
-            fetch('/api/dashboard/' + guildId).then(r => r.json()).then(d => {
-                if (d.error) { document.getElementById('app').innerHTML = '<div class="empty">❌ السيرفر غير موجود</div>'; return; }
+        const CLIENT_ID = '1471172348873932951';
+        const INVITE_URL = `https://discord.com/oauth2/authorize?client_id=${CLIENT_ID}&permissions=8&integration_type=0&scope=bot`;
+
+        let currentView = 'loading';
+        let userData = null;
+        let currentGuildId = null;
+
+        async function init() {
+            try {
+                const res = await fetch('/api/me');
+                const data = await res.json();
+                if (data.loggedIn) {
+                    userData = data;
+                    showUserBar();
+                    const params = new URLSearchParams(window.location.search);
+                    const guildId = params.get('guild');
+                    if (guildId) {
+                        loadGuildDashboard(guildId);
+                    } else {
+                        loadGuilds();
+                    }
+                } else {
+                    showLogin();
+                }
+            } catch (e) {
+                showLogin();
+            }
+        }
+
+        function showUserBar() {
+            const topRight = document.getElementById('topRight');
+            const avImg = userData.avatar ? `<img src="${userData.avatar}" alt="">` : '<span style="font-size:16px">👤</span>';
+            topRight.innerHTML = `
+                <div class="user-info">
+                    <div class="user-avatar">${avImg}</div>
+                    <span class="user-name">${userData.username}</span>
+                </div>
+                <button class="logout-btn" onclick="location.href='/auth/logout'">تسجيل خروج</button>
+                <a href="/" class="back-btn">← الرئيسية</a>
+            `;
+        }
+
+        function showLogin() {
+            document.getElementById('app').innerHTML = `
+                <div class="login-view">
+                    <div class="login-card">
+                        <div class="login-icon">🔐</div>
+                        <h2>لوحة <span class="gradient">التحكم</span></h2>
+                        <p>سجّل دخولك بحساب الديسكورد عشان تقدر تتحكم بسيرفراتك وتعدّل إعدادات البوت</p>
+                        <a href="/auth/login" class="btn btn-discord">
+                            <svg class="discord-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z" fill="currentColor"/></svg>
+                            تسجيل دخول بالديسكورد
+                        </a>
+                        <div class="login-features">
+                            <div class="login-feature"><span class="dot"></span> تحكم بالإعدادات</div>
+                            <div class="login-feature"><span class="dot"></span> شوف اللفلات</div>
+                            <div class="login-feature"><span class="dot"></span> إدارة الاقتراحات</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        async function loadGuilds() {
+            document.getElementById('app').innerHTML = `<div class="loading"><div class="spinner"></div>جاري تحميل سيرفراتك...</div>`;
+            try {
+                const res = await fetch('/api/my-guilds');
+                const guilds = await res.json();
+
+                const botGuilds = guilds.filter(g => g.botIn);
+                const noBot = guilds.filter(g => !g.botIn);
+
+                let html = `
+                    <div class="page-title">
+                        <h2>🖥️ سيرفراتك</h2>
+                        <p>اختر سيرفر عشان تتحكم بإعدادات البوت فيه</p>
+                    </div>
+                    <div class="guilds-grid">
+                `;
+
+                if (botGuilds.length === 0 && noBot.length === 0) {
+                    html += `<div class="empty" style="grid-column:1/-1">📭 ما لقينا سيرفرات أنت أدمن فيها</div>`;
+                }
+
+                botGuilds.forEach(g => {
+                    const icon = g.icon ? `<img src="${g.icon}" alt="">` : g.name.charAt(0);
+                    html += `
+                        <div class="guild-card" onclick="loadGuildDashboard('${g.id}')">
+                            <div class="guild-card-icon">${icon}</div>
+                            <div class="guild-card-info">
+                                <h3>${g.name}</h3>
+                                <div class="sub"><span class="dot on"></span> البوت موجود</div>
+                            </div>
+                            <span class="guild-card-arrow">←</span>
+                        </div>
+                    `;
+                });
+
+                noBot.forEach(g => {
+                    const icon = g.icon ? `<img src="${g.icon}" alt="">` : g.name.charAt(0);
+                    html += `
+                        <a class="guild-card no-bot" href="${INVITE_URL}&guild_id=${g.id}" target="_blank">
+                            <div class="guild-card-icon">${icon}</div>
+                            <div class="guild-card-info">
+                                <h3>${g.name}</h3>
+                                <div class="sub"><span class="dot off"></span> البوت مو موجود — اضغط للإضافة</div>
+                            </div>
+                            <span class="guild-card-arrow add-bot-btn">+ أضف</span>
+                        </a>
+                    `;
+                });
+
+                html += '</div>';
+                document.getElementById('app').innerHTML = html;
+            } catch (e) {
+                document.getElementById('app').innerHTML = '<div class="empty">⚠️ تعذر تحميل السيرفرات</div>';
+            }
+        }
+
+        async function loadGuildDashboard(guildId) {
+            currentGuildId = guildId;
+            history.replaceState(null, '', '/dashboard.html?guild=' + guildId);
+            document.getElementById('app').innerHTML = `<div class="loading"><div class="spinner"></div>جاري تحميل بيانات السيرفر...</div>`;
+            try {
+                const res = await fetch('/api/dashboard/' + guildId);
+                const d = await res.json();
+                if (d.error) {
+                    document.getElementById('app').innerHTML = '<div class="empty">❌ السيرفر غير موجود أو البوت مو فيه</div>';
+                    return;
+                }
+
                 const statusMap = { pending: ['⏳ قيد الانتظار', 'pending'], approved: ['✅ مقبول', 'approved'], rejected: ['❌ مرفوض', 'rejected'] };
                 const settingsList = [
                     ['البريفكس', d.settings.prefix, 'tag'],
@@ -384,30 +1059,35 @@
                     ['ضد الريد', d.settings.antiraid_enabled, 'toggle'],
                     ['اللفلات', d.settings.leveling_enabled, 'toggle']
                 ];
+
                 let html = `
-                <div class="guild-header">
-                    <div class="guild-icon">${d.icon ? '<img src="' + d.icon + '">' : d.name.charAt(0)}</div>
-                    <div class="guild-info"><h2>${d.name}</h2><p>${d.members.toLocaleString()} عضو · ${d.channels} قناة · ${d.roles} رول</p></div>
-                </div>
-                <div class="stats-grid">
-                    <div class="stat-box"><div class="num blue">${d.members.toLocaleString()}</div><div class="lbl">عضو</div></div>
-                    <div class="stat-box"><div class="num green">${d.channels}</div><div class="lbl">قناة</div></div>
-                    <div class="stat-box"><div class="num yellow">${d.roles}</div><div class="lbl">رول</div></div>
-                    <div class="stat-box"><div class="num purple">${d.suggestions.length}</div><div class="lbl">اقتراح</div></div>
-                </div>
-                <div class="section"><h3>⚙️ الإعدادات</h3><div class="settings-grid">
-                    ${settingsList.map(([name, val, type]) => type === 'toggle' ? `<div class="setting-item"><span class="name">${name}</span><span class="val ${val ? 'on' : 'off'}">${val ? 'مفعل' : 'معطل'}</span></div>` : `<div class="setting-item"><span class="name">${name}</span><span class="val on">${val}</span></div>`).join('')}
-                </div></div>`;
+                    <button class="dash-back" onclick="goBack()">→ رجوع للسيرفرات</button>
+                    <div class="guild-header">
+                        <div class="guild-icon">${d.icon ? '<img src="' + d.icon + '">' : d.name.charAt(0)}</div>
+                        <div class="guild-info"><h2>${d.name}</h2><p>${d.members.toLocaleString()} عضو · ${d.channels} قناة · ${d.roles} رول</p></div>
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-box"><div class="num blue">${d.members.toLocaleString()}</div><div class="lbl">عضو</div></div>
+                        <div class="stat-box"><div class="num green">${d.channels}</div><div class="lbl">قناة</div></div>
+                        <div class="stat-box"><div class="num yellow">${d.roles}</div><div class="lbl">رول</div></div>
+                        <div class="stat-box"><div class="num purple">${d.suggestions.length}</div><div class="lbl">اقتراح</div></div>
+                    </div>
+                    <div class="section"><h3>⚙️ الإعدادات</h3><div class="settings-grid">
+                        ${settingsList.map(([name, val, type]) => type === 'toggle' ? `<div class="setting-item"><span class="name">${name}</span><span class="val ${val ? 'on' : 'off'}">${val ? 'مفعل' : 'معطل'}</span></div>` : `<div class="setting-item"><span class="name">${name}</span><span class="val on">${val}</span></div>`).join('')}
+                    </div></div>`;
+
                 if (d.topLevels.length) {
                     html += `<div class="section"><h3>🏆 أعلى اللفلات</h3><div class="lb-list">
                     ${d.topLevels.slice(0, 10).map((u, i) => `<div class="lb-row"><span class="lb-rank">${i + 1}</span><div class="lb-av">${u.avatar ? '<img src="' + u.avatar + '">' : '👤'}</div><span class="lb-name">${u.username}</span><span class="lb-val">Lv.${u.level} (${u.xp} XP)</span></div>`).join('')}
                     </div></div>`;
                 }
+
                 if (d.topEconomy.length) {
                     html += `<div class="section"><h3>✨ أغنى الأعضاء</h3><div class="lb-list">
                     ${d.topEconomy.slice(0, 10).map((u, i) => `<div class="lb-row"><span class="lb-rank">${i + 1}</span><div class="lb-av">${u.avatar ? '<img src="' + u.avatar + '">' : '👤'}</div><span class="lb-name">${u.username}</span><span class="lb-val">${(u.total || 0).toLocaleString()} ✨</span></div>`).join('')}
                     </div></div>`;
                 }
+
                 if (d.suggestions.length) {
                     html += `<div class="section"><h3>💡 الاقتراحات</h3><div class="sug-list">
                     ${d.suggestions.map(s => { const [lbl, cls] = statusMap[s.status] || ['⏳', 'pending']; return `<div class="sug-card"><div class="sug-top"><span class="sug-id">#${s.id}</span><span class="sug-status ${cls}">${lbl}</span></div><p class="sug-text">${s.text}</p><div class="sug-meta"><span>👍 ${s.votes_up}</span><span>👎 ${s.votes_down}</span><span>بواسطة ${s.username}</span></div></div>`; }).join('')}
@@ -415,8 +1095,27 @@
                 } else {
                     html += '<div class="section"><h3>💡 الاقتراحات</h3><div class="empty">📭 لا يوجد اقتراحات بعد</div></div>';
                 }
+
                 document.getElementById('app').innerHTML = html;
-            }).catch(() => { document.getElementById('app').innerHTML = '<div class="empty">⚠️ تعذر تحميل البيانات</div>'; });
+            } catch (e) {
+                document.getElementById('app').innerHTML = '<div class="empty">⚠️ تعذر تحميل البيانات</div>';
+            }
+        }
+
+        function goBack() {
+            history.replaceState(null, '', '/dashboard.html');
+            currentGuildId = null;
+            loadGuilds();
+        }
+
+        // Handle OAuth2 callback code on this page
+        const urlParams = new URLSearchParams(window.location.search);
+        const code = urlParams.get('code');
+        if (code) {
+            // Redirect to the auth callback handler
+            window.location.href = '/auth/callback?code=' + code;
+        } else {
+            init();
         }
     </script>
 </body>
