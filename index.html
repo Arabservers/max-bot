@@ -1,0 +1,1619 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Max Bot — أقوى بوت ديسكورد عربي</title>
+    <meta name="description"
+        content="Max Bot — بوت ديسكورد احترافي متعدد الاستخدامات: إدارة، اقتصاد Novas ✨، لفلات، تذاكر، حماية والمزيد!">
+    <meta name="theme-color" content="#5865F2">
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box
+        }
+
+        :root {
+            --bg: #050510;
+            --bg2: #0a0a1f;
+            --card: rgba(17, 17, 45, 0.6);
+            --card-solid: #0e0e28;
+            --border: rgba(88, 101, 242, 0.15);
+            --border-hover: rgba(88, 101, 242, 0.4);
+            --primary: #5865F2;
+            --primary-dark: #4752c4;
+            --accent: #57F287;
+            --danger: #ED4245;
+            --yellow: #FEE75C;
+            --purple: #9b59b6;
+            --text: #e6edf3;
+            --dim: #7c8da6;
+            --glass: rgba(88, 101, 242, 0.06);
+            --glow: 0 0 40px rgba(88, 101, 242, 0.15);
+            --glow-accent: 0 0 40px rgba(87, 242, 135, 0.15);
+            --radius: 16px;
+            --radius-sm: 10px;
+        }
+
+        html {
+            scroll-behavior: smooth
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Tajawal', sans-serif;
+            overflow-x: hidden;
+            line-height: 1.6
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg)
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 3px
+        }
+
+        /* Background Effects */
+        .bg-grid {
+            position: fixed;
+            inset: 0;
+            background-image: linear-gradient(rgba(88, 101, 242, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(88, 101, 242, 0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            pointer-events: none;
+            z-index: 0
+        }
+
+        .bg-glow {
+            position: fixed;
+            pointer-events: none;
+            z-index: 0;
+            border-radius: 50%;
+            filter: blur(150px);
+            opacity: 0.12
+        }
+
+        .bg-glow-1 {
+            width: 600px;
+            height: 600px;
+            background: var(--primary);
+            top: -10%;
+            right: -5%
+        }
+
+        .bg-glow-2 {
+            width: 500px;
+            height: 500px;
+            background: var(--accent);
+            bottom: 10%;
+            left: -10%
+        }
+
+        .bg-glow-3 {
+            width: 400px;
+            height: 400px;
+            background: var(--purple);
+            top: 50%;
+            left: 40%
+        }
+
+        .stars {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0
+        }
+
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #fff;
+            border-radius: 50%;
+            animation: twinkle var(--dur) infinite ease-in-out
+        }
+
+        @keyframes twinkle {
+
+            0%,
+            100% {
+                opacity: 0.1;
+                transform: scale(0.5)
+            }
+
+            50% {
+                opacity: 0.8;
+                transform: scale(1.2)
+            }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 14px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(24px) saturate(180%);
+            background: rgba(5, 5, 16, 0.75);
+            border-bottom: 1px solid var(--border);
+            z-index: 1000;
+            transition: .3s
+        }
+
+        nav.scrolled {
+            padding: 10px 40px;
+            box-shadow: var(--glow)
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.5rem;
+            font-weight: 900
+        }
+
+        .nav-logo-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            box-shadow: 0 4px 15px rgba(88, 101, 242, 0.4)
+        }
+
+        .nav-logo span {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 8px;
+            align-items: center
+        }
+
+        .nav-links a {
+            color: var(--dim);
+            transition: .3s;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: var(--radius-sm);
+            font-size: 15px
+        }
+
+        .nav-links a:hover {
+            color: var(--text);
+            background: var(--glass)
+        }
+
+        .btn {
+            padding: 11px 26px;
+            border-radius: var(--radius-sm);
+            font-weight: 700;
+            transition: all .3s;
+            cursor: pointer;
+            border: none;
+            font-family: inherit;
+            font-size: 15px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: #fff;
+            box-shadow: 0 4px 20px rgba(88, 101, 242, 0.35)
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 35px rgba(88, 101, 242, 0.55)
+        }
+
+        .btn-glow {
+            background: linear-gradient(135deg, var(--accent), #2ecc71);
+            color: #000;
+            font-weight: 800;
+            box-shadow: 0 4px 20px rgba(87, 242, 135, 0.3)
+        }
+
+        .btn-glow:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 35px rgba(87, 242, 135, 0.5)
+        }
+
+        .btn-outline {
+            border: 2px solid var(--border);
+            background: transparent;
+            color: var(--text)
+        }
+
+        .btn-outline:hover {
+            border-color: var(--primary);
+            background: var(--glass)
+        }
+
+        .mobile-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 24px;
+            cursor: pointer
+        }
+
+        /* Hero */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 140px 20px 100px;
+            position: relative
+        }
+
+        .hero-content {
+            max-width: 860px;
+            z-index: 1
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--glass);
+            border: 1px solid var(--border);
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 13px;
+            color: var(--accent);
+            font-weight: 600;
+            margin-bottom: 30px;
+            animation: fadeInUp .8s
+        }
+
+        .hero-badge .dot {
+            width: 7px;
+            height: 7px;
+            background: var(--accent);
+            border-radius: 50%;
+            animation: pulse 2s infinite
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1
+            }
+
+            50% {
+                opacity: 0.3
+            }
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 900;
+            line-height: 1.2;
+            margin-bottom: 24px;
+            animation: fadeInUp .8s .1s both
+        }
+
+        .hero h1 .gradient {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--dim);
+            margin-bottom: 45px;
+            line-height: 1.9;
+            max-width: 640px;
+            margin-left: auto;
+            margin-right: auto;
+            animation: fadeInUp .8s .2s both
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp .8s .3s both
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+
+        /* Live Stats Bar */
+        .stats-bar {
+            display: flex;
+            gap: 0;
+            justify-content: center;
+            margin-top: 60px;
+            animation: fadeInUp .8s .4s both;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto
+        }
+
+        .stat-item {
+            flex: 1;
+            text-align: center;
+            padding: 24px 20px;
+            border-left: 1px solid var(--border);
+            transition: .3s
+        }
+
+        .stat-item:last-child {
+            border-left: none
+        }
+
+        .stat-item:hover {
+            background: var(--glass)
+        }
+
+        .stat-num {
+            font-size: 2rem;
+            font-weight: 900;
+            margin-bottom: 4px
+        }
+
+        .stat-num.blue {
+            background: linear-gradient(135deg, var(--primary), #7c8cf5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent
+        }
+
+        .stat-num.green {
+            background: linear-gradient(135deg, var(--accent), #2ecc71);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent
+        }
+
+        .stat-num.yellow {
+            background: linear-gradient(135deg, var(--yellow), #f39c12);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent
+        }
+
+        .stat-num.purple {
+            background: linear-gradient(135deg, var(--purple), #e056c1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent
+        }
+
+        .stat-label {
+            color: var(--dim);
+            font-size: 13px;
+            font-weight: 500
+        }
+
+        /* Sections */
+        section {
+            padding: 100px 20px;
+            position: relative;
+            z-index: 1
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 65px
+        }
+
+        .section-header .tag {
+            display: inline-block;
+            padding: 6px 18px;
+            border-radius: 50px;
+            background: var(--glass);
+            border: 1px solid var(--border);
+            color: var(--primary);
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            letter-spacing: 1px
+        }
+
+        .section-header h2 {
+            font-size: 2.8rem;
+            font-weight: 900;
+            margin-bottom: 14px
+        }
+
+        .section-header h2 .gradient {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent
+        }
+
+        .section-header p {
+            color: var(--dim);
+            font-size: 1.1rem;
+            max-width: 550px;
+            margin: 0 auto
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto
+        }
+
+        /* Features */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px
+        }
+
+        .feature-card {
+            background: var(--card);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 32px;
+            transition: all .4s;
+            position: relative;
+            overflow: hidden;
+            cursor: default
+        }
+
+        .feature-card:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-8px);
+            box-shadow: var(--glow)
+        }
+
+        .feature-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            transform: scaleX(0);
+            transition: .4s;
+            transform-origin: right
+        }
+
+        .feature-card:hover::after {
+            transform: scaleX(1);
+            transform-origin: left
+        }
+
+        .feature-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            margin-bottom: 18px;
+            position: relative
+        }
+
+        .feature-icon.mod {
+            background: rgba(237, 66, 69, 0.12);
+            box-shadow: 0 0 20px rgba(237, 66, 69, 0.1)
+        }
+
+        .feature-icon.eco {
+            background: rgba(87, 242, 135, 0.12);
+            box-shadow: 0 0 20px rgba(87, 242, 135, 0.1)
+        }
+
+        .feature-icon.lvl {
+            background: rgba(88, 101, 242, 0.12);
+            box-shadow: 0 0 20px rgba(88, 101, 242, 0.1)
+        }
+
+        .feature-icon.shield {
+            background: rgba(254, 231, 92, 0.12);
+            box-shadow: 0 0 20px rgba(254, 231, 92, 0.1)
+        }
+
+        .feature-icon.welcome {
+            background: rgba(155, 89, 182, 0.12);
+            box-shadow: 0 0 20px rgba(155, 89, 182, 0.1)
+        }
+
+        .feature-icon.ticket {
+            background: rgba(88, 101, 242, 0.12)
+        }
+
+        .feature-icon.react {
+            background: rgba(87, 242, 135, 0.12)
+        }
+
+        .feature-icon.log {
+            background: rgba(237, 66, 69, 0.12)
+        }
+
+        .feature-icon.cmd {
+            background: rgba(254, 231, 92, 0.12)
+        }
+
+        .feature-card h3 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 10px
+        }
+
+        .feature-card p {
+            color: var(--dim);
+            font-size: 13.5px;
+            line-height: 1.8
+        }
+
+        /* Leaderboard */
+        .lb-wrapper {
+            max-width: 800px;
+            margin: 0 auto
+        }
+
+        .lb-card {
+            background: var(--card);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden
+        }
+
+        .lb-row {
+            display: flex;
+            align-items: center;
+            padding: 16px 28px;
+            border-bottom: 1px solid var(--border);
+            transition: .3s;
+            gap: 16px
+        }
+
+        .lb-row:last-child {
+            border: none
+        }
+
+        .lb-row:hover {
+            background: rgba(88, 101, 242, 0.06)
+        }
+
+        .lb-row.top-1 {
+            background: linear-gradient(90deg, rgba(255, 215, 0, 0.08), transparent)
+        }
+
+        .lb-row.top-2 {
+            background: linear-gradient(90deg, rgba(192, 192, 192, 0.06), transparent)
+        }
+
+        .lb-row.top-3 {
+            background: linear-gradient(90deg, rgba(205, 127, 50, 0.06), transparent)
+        }
+
+        .lb-rank {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 14px;
+            flex-shrink: 0
+        }
+
+        .lb-rank.r1 {
+            background: linear-gradient(135deg, #FFD700, #f7a400);
+            color: #000
+        }
+
+        .lb-rank.r2 {
+            background: linear-gradient(135deg, #C0C0C0, #a0a0a0);
+            color: #000
+        }
+
+        .lb-rank.r3 {
+            background: linear-gradient(135deg, #CD7F32, #a06020);
+            color: #fff
+        }
+
+        .lb-rank.rn {
+            background: var(--glass);
+            color: var(--dim)
+        }
+
+        .lb-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--glass);
+            flex-shrink: 0;
+            overflow: hidden
+        }
+
+        .lb-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover
+        }
+
+        .lb-user {
+            flex: 1;
+            font-weight: 600;
+            font-size: 15px
+        }
+
+        .lb-amount {
+            font-weight: 800;
+            color: var(--accent);
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 6px
+        }
+
+        .lb-empty {
+            text-align: center;
+            padding: 50px 20px;
+            color: var(--dim)
+        }
+
+        .lb-empty .icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            opacity: 0.4
+        }
+
+        /* Daily Info */
+        .daily-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            max-width: 900px;
+            margin: 0 auto
+        }
+
+        .daily-card {
+            background: var(--card);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 30px;
+            text-align: center;
+            transition: .4s
+        }
+
+        .daily-card:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-5px);
+            box-shadow: var(--glow)
+        }
+
+        .daily-card .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 14px
+        }
+
+        .daily-card h3 {
+            font-weight: 700;
+            margin-bottom: 8px;
+            font-size: 1.1rem
+        }
+
+        .daily-card .range {
+            font-size: 1.8rem;
+            font-weight: 900;
+            margin: 10px 0
+        }
+
+        .daily-card .range.green {
+            color: var(--accent)
+        }
+
+        .daily-card .range.blue {
+            color: var(--primary)
+        }
+
+        .daily-card .range.red {
+            color: var(--danger)
+        }
+
+        .daily-card p {
+            color: var(--dim);
+            font-size: 13px
+        }
+
+        .daily-card .cooldown {
+            display: inline-block;
+            padding: 5px 14px;
+            border-radius: 8px;
+            background: var(--glass);
+            color: var(--dim);
+            font-size: 12px;
+            margin-top: 10px
+        }
+
+        /* Commands */
+        .cmds-wrapper {
+            max-width: 850px;
+            margin: 0 auto
+        }
+
+        .cmd-group {
+            background: var(--card);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            margin-bottom: 12px;
+            overflow: hidden;
+            transition: .3s
+        }
+
+        .cmd-group:hover {
+            border-color: var(--border-hover)
+        }
+
+        .cmd-header {
+            padding: 20px 26px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: .3s;
+            user-select: none
+        }
+
+        .cmd-header:hover {
+            background: var(--glass)
+        }
+
+        .cmd-header h3 {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 700;
+            font-size: 1.05rem
+        }
+
+        .cmd-header .count {
+            background: var(--glass);
+            padding: 3px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            color: var(--dim);
+            font-weight: 600
+        }
+
+        .cmd-body {
+            padding: 0 26px 20px;
+            display: none
+        }
+
+        .cmd-group.open .cmd-body {
+            display: block
+        }
+
+        .cmd-item {
+            padding: 12px 16px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: .2s;
+            margin-bottom: 4px
+        }
+
+        .cmd-item:hover {
+            background: var(--glass)
+        }
+
+        .cmd-name {
+            font-family: 'Courier New', monospace;
+            background: rgba(88, 101, 242, 0.12);
+            padding: 5px 14px;
+            border-radius: 8px;
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 14px
+        }
+
+        .cmd-desc {
+            color: var(--dim);
+            font-size: 13px
+        }
+
+        .arrow {
+            transition: .4s;
+            font-size: 12px;
+            color: var(--dim);
+            background: var(--glass);
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center
+        }
+
+        .cmd-group.open .arrow {
+            transform: rotate(180deg);
+            background: rgba(88, 101, 242, 0.15);
+            color: var(--primary)
+        }
+
+        /* Servers Preview */
+        .servers-scroll {
+            display: flex;
+            gap: 16px;
+            overflow-x: auto;
+            padding: 10px 0 20px;
+            scrollbar-width: none
+        }
+
+        .servers-scroll::-webkit-scrollbar {
+            display: none
+        }
+
+        .server-card {
+            flex-shrink: 0;
+            background: var(--card);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px 28px;
+            min-width: 220px;
+            text-align: center;
+            transition: .4s
+        }
+
+        .server-card:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-5px)
+        }
+
+        .server-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 16px;
+            margin: 0 auto 12px;
+            overflow: hidden;
+            background: var(--glass);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--primary)
+        }
+
+        .server-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover
+        }
+
+        .server-name {
+            font-weight: 700;
+            font-size: 15px;
+            margin-bottom: 6px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis
+        }
+
+        .server-members {
+            color: var(--dim);
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 50px 20px;
+            position: relative;
+            z-index: 1
+        }
+
+        .footer-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px
+        }
+
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px
+        }
+
+        .footer-brand .icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px
+        }
+
+        .footer-brand span {
+            font-weight: 800;
+            font-size: 1.2rem
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 24px
+        }
+
+        .footer-links a {
+            color: var(--dim);
+            font-size: 14px;
+            transition: .3s;
+            font-weight: 500
+        }
+
+        .footer-links a:hover {
+            color: var(--text)
+        }
+
+        .footer-copy {
+            color: var(--dim);
+            font-size: 13px;
+            width: 100%;
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border)
+        }
+
+        /* Status indicator */
+        .status-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-left: 6px;
+            animation: pulse 2s infinite
+        }
+
+        .status-dot.online {
+            background: var(--accent);
+            box-shadow: 0 0 8px var(--accent)
+        }
+
+        .status-dot.offline {
+            background: var(--danger)
+        }
+
+        /* Responsive */
+        @media(max-width:1024px) {
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr)
+            }
+        }
+
+        @media(max-width:768px) {
+            .hero h1 {
+                font-size: 2.4rem
+            }
+
+            .section-header h2 {
+                font-size: 2rem
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr
+            }
+
+            .daily-grid {
+                grid-template-columns: 1fr
+            }
+
+            .stats-bar {
+                flex-direction: column
+            }
+
+            .stat-item {
+                border-left: none;
+                border-bottom: 1px solid var(--border);
+                padding: 16px
+            }
+
+            .stat-item:last-child {
+                border: none
+            }
+
+            nav {
+                padding: 12px 16px
+            }
+
+            .nav-links .nav-link {
+                display: none
+            }
+
+            .mobile-toggle {
+                display: block
+            }
+
+            .nav-links.open .nav-link {
+                display: block;
+                position: absolute;
+                top: 60px;
+                right: 0;
+                left: 0;
+                background: rgba(5, 5, 16, 0.95);
+                backdrop-filter: blur(20px);
+                padding: 10px 20px;
+                border-bottom: 1px solid var(--border)
+            }
+
+            .footer-content {
+                justify-content: center;
+                text-align: center
+            }
+
+            .footer-links {
+                justify-content: center
+            }
+
+            .lb-row {
+                padding: 12px 16px
+            }
+        }
+
+        @media(max-width:480px) {
+            .hero h1 {
+                font-size: 1.8rem
+            }
+
+            .hero p {
+                font-size: 1rem
+            }
+
+            section {
+                padding: 60px 16px
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="bg-grid"></div>
+    <div class="bg-glow bg-glow-1"></div>
+    <div class="bg-glow bg-glow-2"></div>
+    <div class="bg-glow bg-glow-3"></div>
+    <div class="stars" id="stars"></div>
+
+    <nav id="navbar">
+        <div class="nav-logo">
+            <div class="nav-logo-icon">⚡</div>
+            <span>Max Bot</span>
+        </div>
+        <div class="nav-links" id="navLinks">
+            <a href="#features" class="nav-link">المميزات</a>
+            <a href="#economy" class="nav-link">الاقتصاد</a>
+            <a href="#commands" class="nav-link">الأوامر</a>
+            <a href="#leaderboard" class="nav-link">المتصدرين</a>
+            <a href="#servers" class="nav-link">السيرفرات</a>
+            <a href="https://discord.com/oauth2/authorize?client_id=1471172348873932951&permissions=8&scope=bot%20applications.commands"
+                class="btn btn-glow">🚀 أضف البوت</a>
+            <button class="mobile-toggle"
+                onclick="document.getElementById('navLinks').classList.toggle('open')">☰</button>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-badge"><span class="dot"></span> بوت نشط ويعمل الحين <span class="status-dot online"
+                    id="statusDot"></span></div>
+            <h1>كل شي تحتاجه<br>لسيرفرك <span class="gradient">في بوت واحد</span></h1>
+            <p>إدارة متقدمة، نظام اقتصاد بعملة <strong>Novas ✨</strong>، لفلات وتسلق مستويات، تذاكر دعم، حماية ذكية،
+                وأكثر من <strong>45+ أمر</strong> — مجاناً بالكامل!</p>
+            <div class="hero-buttons">
+                <a href="https://discord.com/oauth2/authorize?client_id=1471172348873932951&permissions=8&scope=bot%20applications.commands"
+                    class="btn btn-glow">🚀 أضف البوت لسيرفرك</a>
+                <a href="#features" class="btn btn-outline">📋 اكتشف المميزات</a>
+            </div>
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <div class="stat-num blue" id="s-guilds">—</div>
+                    <div class="stat-label">سيرفر</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-num green" id="s-users">—</div>
+                    <div class="stat-label">مستخدم</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-num yellow" id="s-commands">—</div>
+                    <div class="stat-label">أمر مستخدم</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-num purple" id="s-uptime">—</div>
+                    <div class="stat-label">وقت التشغيل</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="features">
+        <div class="section-header">
+            <div class="tag">✦ المميزات</div>
+            <h2>كل شي <span class="gradient">احترافي</span></h2>
+            <p>مميزات متقدمة تنافس أقوى البوتات — مجاناً بالكامل</p>
+        </div>
+        <div class="container">
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon mod">🛡️</div>
+                    <h3>إدارة متقدمة</h3>
+                    <p>بان، كيك، كتم، تحذيرات، حذف رسائل، قفل/فتح قنوات — تحكم كامل بسيرفرك مع سجل لكل الأحداث</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon eco">💎</div>
+                    <h3>نظام Novas ✨</h3>
+                    <p>عملة خاصة بنظام اقتصاد كامل — مكافأة يومية تصل 2,000، عمل، سرقة، تحويل، إيداع، سحب، ومتجر رتب</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon lvl">📊</div>
+                    <h3>نظام اللفلات</h3>
+                    <p>نظام XP متقدم مع بطاقات رانك مصممة، ليدربورد، ورتب تلقائية تنعطى حسب المستوى</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon shield">🔒</div>
+                    <h3>حماية ذكية</h3>
+                    <p>ضد السبام التلقائي، ضد الريد مع قفل تلقائي، فلتر كلمات محظورة — سيرفرك محمي 24/7</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon welcome">👋</div>
+                    <h3>ترحيب ووداع</h3>
+                    <p>رسائل ترحيب بصور مخصصة جميلة، رسائل وداع، أوتو رول تلقائي للأعضاء الجدد</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon ticket">🎫</div>
+                    <h3>نظام التذاكر</h3>
+                    <p>دعم فني متكامل بأزرار تفاعلية — فتح وإغلاق تذاكر بضغطة زر واحدة</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon react">🎭</div>
+                    <h3>Reaction Roles</h3>
+                    <p>ربط إيموجيات برتب — العضو يضغط على الريأكشن ويحصل على رتبته تلقائياً</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon log">📝</div>
+                    <h3>سجل الأحداث</h3>
+                    <p>تسجيل كل حدث — حذف رسائل، تعديلات، دخول/خروج أعضاء — ما يفوتك شي</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon cmd">⚡</div>
+                    <h3>Slash + Prefix</h3>
+                    <p>يدعم الأوامر النصية والسلاش كوماندز — استخدم الطريقة الي تناسبك! كل سيرفر يقدر يغير البريفكس</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="economy">
+        <div class="section-header">
+            <div class="tag">💰 الاقتصاد</div>
+            <h2>نظام <span class="gradient">Novas ✨</span></h2>
+            <p>اكسب، اشتغل، سارق، وتنافس مع أصدقائك!</p>
+        </div>
+        <div class="daily-grid">
+            <div class="daily-card">
+                <div class="card-icon">🎁</div>
+                <h3>المكافأة اليومية</h3>
+                <div class="range green">1,000 — 2,000</div>
+                <p>مبلغ عشوائي كل يوم</p>
+                <div class="cooldown">⏰ كل 24 ساعة</div>
+            </div>
+            <div class="daily-card">
+                <div class="card-icon">👷</div>
+                <h3>العمل</h3>
+                <div class="range blue">100 — 500</div>
+                <p>اشتغل واكسب من 12 مهنة مختلفة</p>
+                <div class="cooldown">⏰ كل ساعة</div>
+            </div>
+            <div class="daily-card">
+                <div class="card-icon">🦹</div>
+                <h3>السرقة</h3>
+                <div class="range red">200 — 800</div>
+                <p>مخاطرة عالية — 40% فرصة فشل وغرامة!</p>
+                <div class="cooldown">⏰ كل ساعتين</div>
+            </div>
+        </div>
+        <div style="text-align:center;margin-top:35px">
+            <p style="color:var(--dim);font-size:14px">💡 أدمن السيرفر يقدر يعدّل كل القيم باستخدام أمر <span
+                    style="background:var(--glass);padding:3px 10px;border-radius:6px;color:var(--primary);font-weight:600">/settings</span>
+            </p>
+            <p style="color:var(--dim);font-size:13px;margin-top:8px">🏦 نظام بنك كامل — إيداع وسحب | 💸 بلا حد أقصى
+                للرصيد!</p>
+        </div>
+    </section>
+
+    <section id="leaderboard">
+        <div class="section-header">
+            <div class="tag">🏆 المتصدرين</div>
+            <h2>توب <span class="gradient">Novas ✨</span></h2>
+            <p>أغنى المستخدمين عبر جميع السيرفرات</p>
+        </div>
+        <div class="lb-wrapper">
+            <div class="lb-card" id="lb-container">
+                <div class="lb-empty">
+                    <div class="icon">✨</div>
+                    <p>جاري التحميل...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="servers">
+        <div class="section-header">
+            <div class="tag">🌐 السيرفرات</div>
+            <h2>يشتغل <span class="gradient">الحين</span> في</h2>
+            <p>سيرفرات تثق بـ Max Bot</p>
+        </div>
+        <div class="container">
+            <div class="servers-scroll" id="servers-list">
+                <div class="server-card">
+                    <div class="server-icon">🔄</div>
+                    <div class="server-name">جاري التحميل...</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="commands">
+        <div class="section-header">
+            <div class="tag">📋 الأوامر</div>
+            <h2>أكثر من <span class="gradient">45 أمر</span></h2>
+            <p>استخدم البريفكس <code
+                    style="background:var(--glass);padding:4px 10px;border-radius:6px;color:var(--primary);font-weight:700">#</code>
+                أو <code
+                    style="background:var(--glass);padding:4px 10px;border-radius:6px;color:var(--primary);font-weight:700">/</code>
+            </p>
+        </div>
+        <div class="cmds-wrapper">
+            <div class="cmd-group">
+                <div class="cmd-header" onclick="this.parentElement.classList.toggle('open')">
+                    <h3>🛡️ الإدارة <span class="count">10</span></h3><span class="arrow">▼</span>
+                </div>
+                <div class="cmd-body">
+                    <div class="cmd-item"><span class="cmd-name">/ban</span><span class="cmd-desc">حظر عضو من
+                            السيرفر</span></div>
+                    <div class="cmd-item"><span class="cmd-name">/kick</span><span class="cmd-desc">طرد عضو</span></div>
+                    <div class="cmd-item"><span class="cmd-name">/mute</span><span class="cmd-desc">كتم عضو لمدة
+                            محددة</span></div>
+                    <div class="cmd-item"><span class="cmd-name">/unmute</span><span class="cmd-desc">إلغاء الكتم</span>
+                    </div>
+                    <div class="cmd-item"><span class="cmd-name">/warn</span><span class="cmd-desc">تحذير عضو</span>
+                    </div>
+                    <div class="cmd-item"><span class="cmd-name">/warnings</span><span class="cmd-desc">عرض تحذيرات
+                            عضو</span></div>
+                    <div class="cmd-item"><span class="cmd-name">/clearwarns</span><span class="cmd-desc">مسح كل
+                            التحذيرات</span></div>
+                    <div class="cmd-item"><span class="cmd-name">/clear</span><span class="cmd-desc">حذف رسائل
+                            بالجملة</span></div>
+                    <div class="cmd-item"><span class="cmd-name">/lock</span><span class="cmd-desc">قفل القناة</span>
+                    </div>
+                    <div class="cmd-item"><span class="cmd-name">/unlock</span><span class="cmd-desc">فتح القناة</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cmd-group">
+                <div class="cmd-header" onclick="this.parentElement.classList.toggle('open')">
+                    <h3>✨ نظام Novas <span class="count">14</span></h3><span class="arrow">▼</span>
+                </div>
+                <div class="cmd-body">
+                    <div class="cmd-item"><span class="cmd-name">/daily</span><span class="cmd-desc">المكافأة اليومية
+                            (1,000 - 2,000)</span></div>
+                    <div class="cmd-item"><span class="cmd-name">/work</span><span class="cmd-desc">اشتغل واكسب</span>
+                    </div>
+                    <div class="cmd-item"><span class="cmd-name">/crime</span><span class="cmd-desc">عملية سرقة محفوفة
+                            بالمخاطر</span></div>
+                    <div class="cmd-item"><span class="cmd-name">/balance</span><span class="cmd-desc">عرض رصيدك</span>
+                    </div>
+                    <div class="cmd-item"><span class="cmd-name">/deposit</span><span class="cmd-desc">إيداع في
+                            البنك</span></div>
+                    <div class="cmd-item"><span class="cmd-name">/withdraw</span><span class="cmd-desc">سحب من
+                            البنك</span></div>
+                    <div class="cmd-item"><span class="cmd-name">/transfer</span><span class="cmd-desc">تحويل لعضو
+                            ثاني</span></div>
+                    <div class="cmd-item"><span class="cmd-name">/top</span><span class="cmd-desc">ليدربورد عالمي</span>
+                    </div>
+                    <div class="cmd-item"><span class="cmd-name">/shop</span><span class="cmd-desc">عرض المتجر</span>
+                    </div>
+                    <div class="cmd-item"><span class="cmd-name">/buy</span><span class="cmd-desc">شراء منتج</span>
+                    </div>
+                    <div class="cmd-item"><span class="cmd-name">/additem</span><span class="cmd-desc">إضافة منتج
+                            للمتجر</span></div>
+                    <div class="cmd-item"><span class="cmd-name">/removeitem</span><span class="cmd-desc">حذف
+                            منتج</span></div>
+                    <div class="cmd-item"><span class="cmd-name">/rob</span><span class="cmd-desc">سرقة عضو ثاني</span>
+                    </div>
+                    <div class="cmd-item"><span class="cmd-name">/gamble</span><span class="cmd-desc">مقامرة
+                            بالرصيد</span></div>
+                </div>
+            </div>
+
+            <div class="cmd-group">
+                <div class="cmd-header" onclick="this.parentElement.classList.toggle('open')">
+                    <h3>📊 اللفلات <span class="count">4</span></h3><span class="arrow">▼</span>
+                </div>
+                <div class="cmd-body">
+                    <div class="cmd-item"><span class="cmd-name">/rank</span><span class="cmd-desc">بطاقة الرانك
+                            المصممة</span></div>
+                    <div class="cmd-item"><span class="cmd-name">/leaderboard</span><span class="cmd-desc">متصدرين
+                            السيرفر</span></div>
+                    <div class="cmd-item"><span class="cmd-name">/setlevel</span><span class="cmd-desc">تعيين مستوى
+                            عضو</span></div>
+                    <div class="cmd-item"><span class="cmd-name">/levelrole</span><span class="cmd-desc">ربط رتبة بمستوى
+                            معين</span></div>
+                </div>
+            </div>
+
+            <div class="cmd-group">
+                <div class="cmd-header" onclick="this.parentElement.classList.toggle('open')">
+                    <h3>🔧 الإعدادات <span class="count">12</span></h3><span class="arrow">▼</span>
+                </div>
+                <div class="cmd-body">
+                    <div class="cmd-item"><span class="cmd-name">/settings</span><span class="cmd-desc">إعدادات اقتصاد
+                            السيرفر</span></div>
+                    <div class="cmd-item"><span class="cmd-name">/setprefix</span><span class="cmd-desc">تغيير
+                            البريفكس</span></div>
+                    <div class="cmd-item"><span class="cmd-name">/setwelcome</span><span class="cmd-desc">تعيين قناة
+                            الترحيب</span></div>
+                    <div class="cmd-item"><span class="cmd-name">/setleave</span><span class="cmd-desc">تعيين قناة
+                            الوداع</span></div>
+                    <div class="cmd-item"><span class="cmd-name">/setlog</span><span class="cmd-desc">تعيين قناة
+                            السجل</span></div>
+                    <div class="cmd-item"><span class="cmd-name">/setautorole</span><span class="cmd-desc">رتبة تلقائية
+                            للأعضاء الجدد</span></div>
+                    <div class="cmd-item"><span class="cmd-name">/antispam</span><span class="cmd-desc">تفعيل/تعطيل ضد
+                            السبام</span></div>
+                    <div class="cmd-item"><span class="cmd-name">/antiraid</span><span class="cmd-desc">تفعيل/تعطيل ضد
+                            الريد</span></div>
+                    <div class="cmd-item"><span class="cmd-name">/wordfilter</span><span class="cmd-desc">تفعيل/تعطيل
+                            فلتر الكلمات</span></div>
+                    <div class="cmd-item"><span class="cmd-name">/addword</span><span class="cmd-desc">إضافة كلمة
+                            محظورة</span></div>
+                    <div class="cmd-item"><span class="cmd-name">/removeword</span><span class="cmd-desc">حذف كلمة
+                            محظورة</span></div>
+                    <div class="cmd-item"><span class="cmd-name">/leveling</span><span class="cmd-desc">تفعيل/تعطيل نظام
+                            اللفلات</span></div>
+                </div>
+            </div>
+
+            <div class="cmd-group">
+                <div class="cmd-header" onclick="this.parentElement.classList.toggle('open')">
+                    <h3>📌 عام <span class="count">10</span></h3><span class="arrow">▼</span>
+                </div>
+                <div class="cmd-body">
+                    <div class="cmd-item"><span class="cmd-name">/userinfo</span><span class="cmd-desc">معلومات عن
+                            عضو</span></div>
+                    <div class="cmd-item"><span class="cmd-name">/serverinfo</span><span class="cmd-desc">معلومات
+                            السيرفر</span></div>
+                    <div class="cmd-item"><span class="cmd-name">/avatar</span><span class="cmd-desc">عرض صورة
+                            عضو</span></div>
+                    <div class="cmd-item"><span class="cmd-name">/embed</span><span class="cmd-desc">إنشاء إمبد
+                            مخصص</span></div>
+                    <div class="cmd-item"><span class="cmd-name">/reactionrole</span><span class="cmd-desc">ربط إيموجي
+                            برتبة</span></div>
+                    <div class="cmd-item"><span class="cmd-name">/ticket</span><span class="cmd-desc">إنشاء نظام
+                            تذاكر</span></div>
+                    <div class="cmd-item"><span class="cmd-name">/suggest</span><span class="cmd-desc">إرسال
+                            اقتراح</span></div>
+                    <div class="cmd-item"><span class="cmd-name">/suggestions</span><span class="cmd-desc">عرض
+                            الاقتراحات</span></div>
+                    <div class="cmd-item"><span class="cmd-name">/approve</span><span class="cmd-desc">قبول
+                            اقتراح</span></div>
+                    <div class="cmd-item"><span class="cmd-name">/reject</span><span class="cmd-desc">رفض اقتراح</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section style="padding:60px 20px">
+        <div
+            style="max-width:700px;margin:0 auto;text-align:center;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:50px 30px;position:relative;overflow:hidden">
+            <div
+                style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(88,101,242,0.05),rgba(87,242,135,0.05));pointer-events:none">
+            </div>
+            <h2 style="font-size:2rem;font-weight:900;margin-bottom:12px;position:relative">جاهز تبدأ؟ 🚀</h2>
+            <p style="color:var(--dim);margin-bottom:30px;position:relative">أضف Max Bot لسيرفرك الحين وابدأ استخدم كل
+                المميزات — مجاناً!</p>
+            <a href="https://discord.com/oauth2/authorize?client_id=1471172348873932951&permissions=8&scope=bot%20applications.commands"
+                class="btn btn-glow" style="font-size:17px;padding:14px 40px;position:relative">⚡ أضف البوت الحين</a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-brand">
+                <div class="icon">⚡</div>
+                <span>Max Bot</span>
+            </div>
+            <div class="footer-links">
+                <a
+                    href="https://discord.com/oauth2/authorize?client_id=1471172348873932951&permissions=8&scope=bot%20applications.commands">أضف
+                    البوت</a>
+                <a href="#features">المميزات</a>
+                <a href="#commands">الأوامر</a>
+                <a href="#leaderboard">المتصدرين</a>
+            </div>
+        </div>
+        <div class="footer-copy">Max Bot © 2026 — صنع بـ ❤️ | كل الحقوق محفوظة</div>
+    </footer>
+
+    <script>
+        const starsEl = document.getElementById('stars');
+        for (let i = 0; i < 80; i++) {
+            const s = document.createElement('div'); s.className = 'star';
+            s.style.left = Math.random() * 100 + '%'; s.style.top = Math.random() * 100 + '%';
+            s.style.setProperty('--dur', (3 + Math.random() * 6) + 's');
+            s.style.animationDelay = Math.random() * 5 + 's';
+            starsEl.appendChild(s);
+        }
+
+        window.addEventListener('scroll', () => {
+            document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
+        });
+
+        document.querySelectorAll('a[href^="#"]').forEach(a => {
+            a.addEventListener('click', e => { e.preventDefault(); const t = document.querySelector(a.getAttribute('href')); if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' }) });
+        });
+
+        function fmt(n) {
+            if (n >= 1000000) return (n / 1000000).toFixed(1) + 'M';
+            if (n >= 1000) return (n / 1000).toFixed(1) + 'K';
+            return n.toLocaleString();
+        }
+
+        function fmtUptime(ms) {
+            const d = Math.floor(ms / 86400000);
+            const h = Math.floor((ms % 86400000) / 3600000);
+            const m = Math.floor((ms % 3600000) / 60000);
+            if (d > 0) return d + 'd ' + h + 'h';
+            if (h > 0) return h + 'h ' + m + 'm';
+            return m + 'm';
+        }
+
+        function animateNum(el, target, duration = 1500) {
+            let start = 0; const step = target / (duration / 16);
+            const fn = () => { start = Math.min(start + step, target); el.textContent = fmt(Math.floor(start)); if (start < target) requestAnimationFrame(fn); };
+            fn();
+        }
+
+        let statsLoaded = false;
+        function loadStats() {
+            fetch('/api/stats').then(r => r.json()).then(d => {
+                if (!statsLoaded) {
+                    animateNum(document.getElementById('s-guilds'), d.guilds || 0);
+                    animateNum(document.getElementById('s-users'), d.users || 0);
+                    animateNum(document.getElementById('s-commands'), d.commands || 0);
+                    statsLoaded = true;
+                } else {
+                    document.getElementById('s-guilds').textContent = fmt(d.guilds || 0);
+                    document.getElementById('s-users').textContent = fmt(d.users || 0);
+                    document.getElementById('s-commands').textContent = fmt(d.commands || 0);
+                }
+                document.getElementById('s-uptime').textContent = fmtUptime(d.uptime || 0);
+                const dot = document.getElementById('statusDot');
+                if (d.guilds > 0) { dot.className = 'status-dot online' } else { dot.className = 'status-dot offline' }
+            }).catch(() => {
+                document.getElementById('statusDot').className = 'status-dot offline';
+            });
+        }
+        loadStats();
+        setInterval(loadStats, 15000);
+
+        fetch('/api/bot-info').then(r => r.json()).then(info => {
+            if (info.avatar) {
+                document.querySelectorAll('.nav-logo-icon').forEach(el => {
+                    el.innerHTML = '<img src="' + info.avatar + '" style="width:100%;height:100%;border-radius:10px;object-fit:cover">';
+                });
+                document.querySelectorAll('.footer-brand .icon').forEach(el => {
+                    el.innerHTML = '<img src="' + info.avatar + '" style="width:100%;height:100%;border-radius:12px;object-fit:cover">';
+                });
+            }
+        }).catch(() => { });
+
+        function loadLeaderboard() {
+            fetch('/api/leaderboard').then(r => r.json()).then(data => {
+                const c = document.getElementById('lb-container');
+                if (!data.length) {
+                    c.innerHTML = '<div class="lb-empty"><div class="icon">✨</div><p>لا يوجد بيانات بعد!<br><small style="color:var(--dim)">أضف البوت وابدأ باستخدام أوامر Novas ✨</small></p></div>';
+                    return;
+                }
+                c.innerHTML = data.slice(0, 15).map((u, i) => {
+                    const rc = i === 0 ? 'r1' : i === 1 ? 'r2' : i === 2 ? 'r3' : 'rn';
+                    const tc = i === 0 ? 'top-1' : i === 1 ? 'top-2' : i === 2 ? 'top-3' : '';
+                    const medal = i === 0 ? '👑' : i === 1 ? '🥈' : i === 2 ? '🥉' : (i + 1);
+                    const avatar = u.avatar ? `<img src="${u.avatar}" alt="">` : `<span style="font-size:18px">👤</span>`;
+                    return `<div class="lb-row ${tc}"><div class="lb-rank ${rc}">${medal}</div><div class="lb-avatar">${avatar}</div><div class="lb-user">${u.username}</div><div class="lb-amount">${(u.total || 0).toLocaleString()} ✨</div></div>`;
+                }).join('');
+            }).catch(() => {
+                document.getElementById('lb-container').innerHTML = '<div class="lb-empty"><div class="icon">⚠️</div><p>تعذر تحميل البيانات</p></div>';
+            });
+        }
+        loadLeaderboard();
+        setInterval(loadLeaderboard, 60000);
+
+        function loadServers() {
+            fetch('/api/guilds').then(r => r.json()).then(guilds => {
+                const c = document.getElementById('servers-list');
+                if (!guilds.length) { c.innerHTML = '<div class="server-card"><div class="server-icon">📭</div><div class="server-name">لا يوجد سيرفرات بعد</div></div>'; return }
+                c.innerHTML = guilds.map(g => {
+                    const icon = g.icon ? `<img src="${g.icon}" alt="">` : `<span>${g.name.charAt(0)}</span>`;
+                    return `<a href="/dashboard.html?guild=${g.id}" style="text-decoration:none;color:inherit"><div class="server-card" style="cursor:pointer;transition:transform .2s" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform=''"><div class="server-icon">${icon}</div><div class="server-name">${g.name}</div><div class="server-members"><span class="status-dot online" style="animation:none;width:6px;height:6px"></span> ${g.members.toLocaleString()} عضو</div></div></a>`;
+                }).join('');
+            }).catch(() => { });
+        }
+        loadServers();
+        setInterval(loadServers, 60000);
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(e => { if (e.isIntersecting) { e.target.style.opacity = '1'; e.target.style.transform = 'translateY(0)' } });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.feature-card,.daily-card,.cmd-group,.lb-card').forEach(el => {
+            el.style.opacity = '0'; el.style.transform = 'translateY(30px)'; el.style.transition = 'opacity 0.6s,transform 0.6s';
+            observer.observe(el);
+        });
+    </script>
+</body>
+
+</html>
