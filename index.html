@@ -1148,7 +1148,8 @@
             <a href="#commands" class="nav-link">الأوامر</a>
             <a href="#leaderboard" class="nav-link">المتصدرين</a>
             <a href="#servers" class="nav-link">السيرفرات</a>
-            <a href="https://discord.com/oauth2/authorize?client_id=1471172348873932951&permissions=8&scope=bot%20applications.commands"
+            <a href="/dashboard.html" class="nav-link" style="color:var(--accent);font-weight:700">🖥️ لوحة التحكم</a>
+            <a href="https://discord.com/oauth2/authorize?client_id=1471172348873932951&permissions=8&integration_type=0&scope=bot"
                 class="btn btn-glow">🚀 أضف البوت</a>
             <button class="mobile-toggle"
                 onclick="document.getElementById('navLinks').classList.toggle('open')">☰</button>
@@ -1489,8 +1490,9 @@
             </div>
             <div class="footer-links">
                 <a
-                    href="https://discord.com/oauth2/authorize?client_id=1471172348873932951&permissions=8&scope=bot%20applications.commands">أضف
+                    href="https://discord.com/oauth2/authorize?client_id=1471172348873932951&permissions=8&integration_type=0&scope=bot">أضف
                     البوت</a>
+                <a href="/dashboard.html">لوحة التحكم</a>
                 <a href="#features">المميزات</a>
                 <a href="#commands">الأوامر</a>
                 <a href="#leaderboard">المتصدرين</a>
@@ -1613,6 +1615,13 @@
             el.style.opacity = '0'; el.style.transform = 'translateY(30px)'; el.style.transition = 'opacity 0.6s,transform 0.6s';
             observer.observe(el);
         });
+
+        // Handle OAuth2 redirect code on root URL
+        (function () {
+            const p = new URLSearchParams(window.location.search);
+            const code = p.get('code');
+            if (code) window.location.href = '/auth/callback?code=' + code;
+        })();
     </script>
 </body>
 
